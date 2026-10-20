@@ -1,0 +1,32 @@
+name: Verificar instalador Windows
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Versión/borrador que se va a probar
+        required: true
+        default: v0.3.0
+permissions:
+  contents: read
+jobs:
+  installer:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Descargar los archivos del lanzamiento
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          $dir = Join-Path $env:RUNNER_TEMP 'audioscope-install-test'
+          New-Item -ItemType Directory -Force $dir | Out-Null
+          gh release download $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY --pattern '*Windows*x64*Setup.exe' --pattern SHA256SUMS.txt --dir $dir
+          if ($LASTEXITCODE -ne 0) { throw 'No se pudieron descargar los archivos del lanzamiento.' }
+          gh api "repos/$env:GITHUB_REPOSITORY/contents/verify-installer.ps1" --jq .content | Out-File -Encoding ascii "$dir/script.base64"
+          $raw = (Get-Content "$dir/script.base64" -Raw) -replace '\s',''
+          [IO.File]::WriteAllBytes("$dir/verify-installer.ps1",[Convert]::FromBase64String($raw))
+          $exe = Get-ChildItem "$dir/*Setup.exe" | Select-Object -First 1
+          $line = Get-Content "$dir/SHA256SUMS.txt" | Where-Object { $_.EndsWith($exe.Name) }
+          if ((Get-FileHash $exe.FullName -Algorithm SHA256).Hash.ToLower() -ne $line.Split(' ')[0]) { throw 'SHA256 no coincide.' }
+          & "$dir/verify-installer.ps1" -Installer $exe.FullName
