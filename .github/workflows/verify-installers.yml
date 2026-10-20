@@ -5,7 +5,7 @@ on:
       tag:
         description: Versión/borrador que se va a probar
         required: true
-        default: v0.3.0
+        default: v0.3.1
 permissions:
   contents: write # GitHub requires write access to download a draft release.
 jobs:
@@ -29,4 +29,9 @@ jobs:
           $exe = Get-ChildItem "$dir/*Setup.exe" | Select-Object -First 1
           $line = Get-Content "$dir/SHA256SUMS.txt" | Where-Object { $_.EndsWith($exe.Name) }
           if ((Get-FileHash $exe.FullName -Algorithm SHA256).Hash.ToLower() -ne $line.Split(' ')[0]) { throw 'SHA256 no coincide.' }
-          & "$dir/verify-installer.ps1" -Installer $exe.FullName
+          $old = Join-Path $dir 'previous'
+          New-Item -ItemType Directory -Force $old | Out-Null
+          gh release download v0.3.0 --repo $env:GITHUB_REPOSITORY --pattern '*Windows*x64*Setup.exe' --dir $old
+          if ($LASTEXITCODE -ne 0) { throw 'No se pudo obtener la versión anterior para probar la actualización.' }
+          $previous = Get-ChildItem "$old/*Setup.exe" | Select-Object -First 1
+          & "$dir/verify-installer.ps1" -Installer $exe.FullName -PreviousInstaller $previous.FullName
