@@ -1,20 +1,25 @@
 # AudioScope Pro
 
-Repositorio público de instaladores y actualizaciones de AudioScope Pro. El código de la aplicación no se incluye aquí.
+Medición y visualización de audio. Edición gratuita para macOS y Windows.
 
-Todavía no hay una versión estable pública. La versión 0.3.0 está en un borrador de pruebas, visible únicamente para colaboradores autorizados.
+## Descargar 0.3.1
 
-## Compatibilidad
+- [macOS — Apple Silicon, macOS 26+](https://github.com/prodbyuzi/audioscope-releases/releases/download/v0.3.1/AudioScope-0.3.1-macOS-arm64.pkg)
+- [Windows — Windows 10/11 x64](https://github.com/prodbyuzi/audioscope-releases/releases/download/v0.3.1/AudioScope-0.3.1-Windows-x64-Setup.exe)
+- [Instrucciones de instalación](https://github.com/prodbyuzi/audioscope-releases/releases/download/v0.3.1/INSTALACION.txt)
 
-- macOS 26 o posterior, Apple Silicon.
-- Windows 10/11, x64.
+Esta edición de macOS no está firmada con Developer ID ni notarizada por Apple: puede requerir autorización manual en Privacidad y seguridad. El instalador Windows no tiene certificado Authenticode y puede mostrar SmartScreen. Lee las instrucciones antes de instalar. No necesitas desactivar las protecciones del sistema.
 
 ## Actualizaciones
 
-La aplicación instalada incorpora búsqueda automática y manual de actualizaciones, descarga y ejecución del instalador desde el propio programa. En **Ajustes → Acerca de** puedes desactivar la búsqueda automática. Las copias portátiles requieren instalar la aplicación primero. Los borradores no se anuncian a los usuarios.
+En **Ajustes → Acerca de** puedes buscar actualizaciones y activar o desactivar la búsqueda automática.
 
-El paquete de macOS de prueba no tiene firma Developer ID ni notarización. El instalador Windows de prueba no tiene firma Authenticode. La publicación estable de macOS queda pendiente de los certificados de Apple.
+En macOS, AudioScope avisa y descarga el instalador, verifica su firma de actualización y lo guarda en Descargas. El usuario cierra AudioScope y su DAW y ejecuta el instalador manualmente. No se instala al cerrar la aplicación.
 
-Los presets del usuario se conservan durante instalación y desinstalación. Cierra tu DAW antes de actualizar los complementos.
+En Windows, AudioScope avisa, descarga, verifica y permite ejecutar el instalador con autorización. Requiere usar la aplicación instalada para las actualizaciones integradas.
 
-[Versiones publicadas](https://github.com/prodbyuzi/audioscope-releases/releases)
+Los ajustes y presets se conservan. Cierra el DAW antes de actualizar los complementos.
+
+Este repositorio contiene instaladores, archivos de actualización y scripts de verificación del instalador Windows. No contiene el código de AudioScope ni claves privadas.
+
+[Versiones y novedades](https://github.com/prodbyuzi/audioscope-releases/releases)
